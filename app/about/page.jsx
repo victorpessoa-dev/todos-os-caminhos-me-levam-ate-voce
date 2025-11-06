@@ -40,7 +40,7 @@ export default function About() {
             {aboutInfo?.title || "Sobre Mim"}
           </h1>
           <p className="text-xl text-gray-600">
-            Um peregrino em busca de Cristo
+            Uma peregrina em busca de Cristo
           </p>
         </div>
 
@@ -102,7 +102,7 @@ export default function About() {
           ))}
         </div>
 
-        <div className="bg-marsala/10 border-l-4 border-marsala p-8 rounded-lg">
+        <div className="bg-white bg-opacity-70 p-8 rounded-lg">
           <p className="font-script text-2xl text-gray-800 text-center">
             “Senhor, para onde iremos? Tu tens as palavras da vida eterna.”
           </p>
