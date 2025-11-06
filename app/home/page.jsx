@@ -21,7 +21,7 @@ export default function Home() {
             Todos os caminhos me levam até <span className="text-marsala">Você</span>
           </h1>
 
-          <p className="text-xl sm:text-2xl text-gray-600 mb-12 font-light">
+          <p className="text-xl italic sm:text-2xl text-gray-600 mb-12 font-light">
             Um diário sobre minha vida com Cristo.
           </p>
 
@@ -42,7 +42,7 @@ export default function Home() {
 
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8 text-center">
+          <div className="grid md:grid-cols-2 gap-8 text-center">
             <div className="p-8 animate-fadeIn">
               <div className="text-5xl mb-4">📖</div>
               <h3 className="font-script text-2xl text-gray-800 mb-3">Meu Diário</h3>
@@ -56,14 +56,6 @@ export default function Home() {
               <h3 className="font-script text-2xl text-gray-800 mb-3">Galeria</h3>
               <p className="text-gray-600">
                 Momentos capturados em fotos, cada imagem conta uma história de fé e gratidão.
-              </p>
-            </div>
-
-            <div className="p-8 animate-fadeIn" style={{ animationDelay: '0.2s' }}>
-              <div className="text-5xl mb-4">🙏</div>
-              <h3 className="font-script text-2xl text-gray-800 mb-3">Oração</h3>
-              <p className="text-gray-600">
-                Compartilhe seus pedidos de oração. Juntos, levamos nossas intenções ao Pai.
               </p>
             </div>
           </div>

@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "server": "nodemon --watch server --exec \"prisma generate && ts-node server/server.js\"",
     "build": "next build",
     "start": "next start",
+    "studio": "npx prisma studio",
+    "migrate": "npx prisma migrate dev",
+    "generate": "npx prisma generate",
     "lint": "eslint ."
   },
   "dependencies": {

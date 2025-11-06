@@ -27,7 +27,7 @@ export default function Diary() {
         {/* Cabeçalho */}
         <div className="text-center mb-16 animate-fadeIn">
           <h1 className="font-script text-5xl sm:text-6xl text-gray-800 mb-4">
-            Meu Diário com Cristo
+            Meu Diário com <span className="text-marsala">Cristo</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Reflexões sobre os caminhos que me levam até Ele, escritas com o coração.
