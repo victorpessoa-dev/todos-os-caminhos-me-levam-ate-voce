@@ -1,6 +1,7 @@
 "use client";
 import { useState } from 'react';
 import { X } from 'lucide-react';
+import { getGalleryItems } from '../api/api';
 
 export default function GalleryItem({ image, caption, reflection }) {
   const [isOpen, setIsOpen] = useState(false);

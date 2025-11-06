@@ -1,40 +1,44 @@
 "use client";
-import { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Menu, X } from "lucide-react";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
   const navLinks = [
-    { path: '/', label: 'Home' },
-    { path: '/diary', label: 'Meu Diário' },
-    { path: '/gallery', label: 'Galeria' },
-    { path: '/about', label: 'Sobre' },
-    { path: '/contact', label: 'Contato' },
+    { path: "/", label: "Home" },
+    { path: "/diary", label: "Meu Diário" },
+    { path: "/gallery", label: "Galeria" },
+    { path: "/about", label: "Sobre" },
   ];
 
   const isActive = (path) => pathname === path;
 
   return (
     <header className="bg-white/95 backdrop-blur-sm shadow-sm fixed w-full top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
         <div className="flex justify-between items-center h-20">
-          <Link href="/" className="flex items-center space-x-2 group">
-            <span className="text-2xl sm:text-3xl transition-transform group-hover:scale-110">✝</span>
-            <span className="font-script text-xl sm:text-2xl text-gray-800 tracking-wide">
-              Todos os Caminhos me levam até Você
+          {/* Logo e frase */}
+          <Link href="/" className="flex items-center space-x-3 group">
+            <span className="text-2xl sm:text-3xl text-gold transition-transform group-hover:scale-110">
+              ✝
+            </span>
+            <span className="font-script text-lg sm:text-2xl text-gray-800 tracking-wide whitespace-nowrap">
+              Todos os Caminhos me levam até <span className="text-gold">Você</span>
             </span>
           </Link>
 
-          <nav className="hidden md:flex space-x-8">
+          <nav className="hidden md:flex items-center space-x-10">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 href={link.path}
-                className={`text-sm font-medium transition-colors hover:text-gold ${isActive(link.path) ? 'text-gold border-b-2 border-gold' : 'text-gray-700'
+                className={`text-base font-medium transition-colors hover:text-gold ${isActive(link.path)
+                  ? "text-gold border-b-2 border-gold pb-1"
+                  : "text-gray-700"
                   }`}
               >
                 {link.label}
@@ -59,7 +63,7 @@ export default function Header() {
                 key={link.path}
                 href={link.path}
                 onClick={() => setIsMenuOpen(false)}
-                className={`block py-2 text-base font-medium transition-colors hover:text-gold ${isActive(link.path) ? 'text-gold' : 'text-gray-700'
+                className={`block py-2 text-base font-medium transition-colors hover:text-gold ${isActive(link.path) ? "text-gold" : "text-gray-700"
                   }`}
               >
                 {link.label}
