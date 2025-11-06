@@ -29,7 +29,7 @@ export default function BlogCard({ slug, title, createdAt, updatedAt, descriptio
           </time>
         </div>
 
-        <h3 className="font-script text-2xl text-gray-800 mb-3 hover:text-gold transition-colors">
+        <h3 className="font-script text-2xl text-gray-800 mb-3 hover:text-marsala transition-colors">
           {title}
         </h3>
 
@@ -39,7 +39,7 @@ export default function BlogCard({ slug, title, createdAt, updatedAt, descriptio
 
         <Link
           href={`/diary/${slug}`}
-          className="inline-block text-gold hover:text-gray-800 font-medium transition-colors group"
+          className="inline-block text-marsala hover:text-gray-800 font-medium transition-colors group"
         >
           Ler mais
           <span className="inline-block ml-2 group-hover:translate-x-2 transition-transform">

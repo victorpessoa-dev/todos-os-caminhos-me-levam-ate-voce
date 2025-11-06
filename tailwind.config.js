@@ -9,7 +9,7 @@ export default {
     extend: {
       colors: {
         beige: "#FAF8F2",
-        gold: "#5A0F11",
+        marsala: "#5A0F11",
         blue: "#B3D4E0",
       },
       fontFamily: {

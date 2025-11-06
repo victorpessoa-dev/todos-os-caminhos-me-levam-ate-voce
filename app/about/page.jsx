@@ -72,19 +72,19 @@ export default function About() {
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           {[
             {
-              icon: <Cross className="w-12 h-12 text-gold mx-auto mb-4" />,
+              icon: <Cross className="w-12 h-12 text-marsala mx-auto mb-4" />,
               title: "Fé",
               text: "A fé é o alicerce desta jornada. Confio no plano de Deus para minha vida.",
               delay: "0s",
             },
             {
-              icon: <BookOpen className="w-12 h-12 text-gold mx-auto mb-4" />,
+              icon: <BookOpen className="w-12 h-12 text-marsala mx-auto mb-4" />,
               title: "Palavra",
               text: "A Bíblia é meu guia diário, fonte de sabedoria e consolo.",
               delay: "0.1s",
             },
             {
-              icon: <Heart className="w-12 h-12 text-gold mx-auto mb-4" />,
+              icon: <Heart className="w-12 h-12 text-marsala mx-auto mb-4" />,
               title: "Amor",
               text: "O amor de Cristo me transforma e me move a amar o próximo.",
               delay: "0.2s",
@@ -102,7 +102,7 @@ export default function About() {
           ))}
         </div>
 
-        <div className="bg-gold/10 border-l-4 border-gold p-8 rounded-lg">
+        <div className="bg-marsala/10 border-l-4 border-marsala p-8 rounded-lg">
           <p className="font-script text-2xl text-gray-800 text-center">
             “Senhor, para onde iremos? Tu tens as palavras da vida eterna.”
           </p>
