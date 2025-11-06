@@ -18,7 +18,7 @@ export default function Home() {
           <Heart className="w-16 h-16 text-gold mx-auto mb-6 animate-pulse" />
 
           <h1 className="font-script text-5xl sm:text-6xl md:text-7xl text-gray-800 mb-6 leading-tight">
-            Todos os caminhos me levam até Você.
+            Todos os caminhos me levam até <span className="text-gold">Você</span>
           </h1>
 
           <p className="text-xl sm:text-2xl text-gray-600 mb-12 font-light">
@@ -27,13 +27,13 @@ export default function Home() {
 
           <Link
             href="/diary"
-            className="inline-block bg-gold text-white px-8 py-4 rounded-full font-medium hover:bg-gray-800 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+            className="inline-block bg-gold text-white italic px-8 py-4 rounded-full font-medium hover:bg-gray-800 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
           >
             Entrar no Diário
           </Link>
         </div>
 
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+        <div className="absolute bottom-10 center -translate-x-1/2 animate-bounce">
           <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex items-start justify-center p-2">
             <div className="w-1 h-3 bg-gray-400 rounded-full"></div>
           </div>
