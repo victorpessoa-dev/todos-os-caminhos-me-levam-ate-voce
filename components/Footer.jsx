@@ -34,14 +34,14 @@ export default function Footer() {
         <div className="flex justify-center items-center space-x-6 mb-8">
           <button
             onClick={handleShare}
-            className="p-3 rounded-full bg-white hover:bg-gold hover:text-white transition-all duration-300 shadow-sm hover:shadow-md"
+            className="p-3 rounded-full bg-white hover:bg-marsala hover:text-white transition-all duration-300 shadow-sm hover:shadow-md"
             title="Compartilhar"
           >
             <Share2 className="w-5 h-5" />
           </button>
           <button
             onClick={scrollToTop}
-            className="p-3 rounded-full bg-white hover:bg-gold hover:text-white transition-all duration-300 shadow-sm hover:shadow-md"
+            className="p-3 rounded-full bg-white hover:bg-marsala hover:text-white transition-all duration-300 shadow-sm hover:shadow-md"
             title="Voltar ao topo"
           >
             <ArrowUp className="w-5 h-5" />

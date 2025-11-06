@@ -23,11 +23,11 @@ export default function Header() {
         <div className="flex justify-between items-center h-20">
           {/* Logo e frase */}
           <Link href="/" className="flex items-center space-x-3 group">
-            <span className="text-2xl sm:text-3xl text-gold transition-transform group-hover:scale-110">
+            <span className="text-2xl sm:text-3xl text-marsala transition-transform group-hover:scale-110">
               ✝
             </span>
             <span className="font-script text-lg sm:text-2xl text-gray-800 tracking-wide whitespace-nowrap">
-              Todos os Caminhos me levam até <span className="text-gold">Você</span>
+              Todos os Caminhos me levam até <span className="text-marsala">Você</span>
             </span>
           </Link>
 
@@ -36,8 +36,8 @@ export default function Header() {
               <Link
                 key={link.path}
                 href={link.path}
-                className={`text-base font-medium transition-colors hover:text-gold ${isActive(link.path)
-                  ? "text-gold border-b-2 border-gold pb-1"
+                className={`text-base font-medium transition-colors hover:text-marsala ${isActive(link.path)
+                  ? "text-marsala border-b-2 border-marsala pb-1"
                   : "text-gray-700"
                   }`}
               >
@@ -63,7 +63,7 @@ export default function Header() {
                 key={link.path}
                 href={link.path}
                 onClick={() => setIsMenuOpen(false)}
-                className={`block py-2 text-base font-medium transition-colors hover:text-gold ${isActive(link.path) ? "text-gold" : "text-gray-700"
+                className={`block py-2 text-base font-medium transition-colors hover:text-marsala ${isActive(link.path) ? "text-marsala" : "text-gray-700"
                   }`}
               >
                 {link.label}

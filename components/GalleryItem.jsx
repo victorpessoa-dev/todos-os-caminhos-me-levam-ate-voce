@@ -33,7 +33,7 @@ export default function GalleryItem({ image, caption, reflection }) {
         >
           <button
             onClick={() => setIsOpen(false)}
-            className="absolute top-4 right-4 p-2 bg-white rounded-full hover:bg-gold hover:text-white transition-colors"
+            className="absolute top-4 right-4 p-2 bg-white rounded-full hover:bg-marsala hover:text-white transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
