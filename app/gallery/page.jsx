@@ -29,7 +29,7 @@ export default function Diary() {
           <h1 className="font-script text-5xl sm:text-6xl text-gray-800 mb-4">
             Meu momentos com <span className="text-marsala">Cristo</span>
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl italic text-gray-600 max-w-2xl mx-auto">
             Momentos que me levam até Ele, vividos com o coração.
           </p>
         </div>
