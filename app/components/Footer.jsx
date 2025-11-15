@@ -31,7 +31,7 @@ export default function Footer() {
           <p className="font-script text-2xl sm:text-3xl text-gray-800 mb-2">
             "Eu sou o Caminho, a Verdade e a Vida."
           </p>
-          <p className="text-sm text-gray-600 italic">João 14,6</p>
+          <p className="text-gray-600 italic">João 14,6</p>
         </div>
 
         <div className="flex justify-center items-center space-x-6 mb-12">
@@ -62,7 +62,7 @@ export default function Footer() {
 
         <div className="text-center text-sm text-gray-600">
           <p>© {new Date().getFullYear()} Todos os Caminhos me levam até Você</p>
-          <p className="mt-2">Feito por <a className="font-bold" href="https://github.com/victorpessoa-dev" target="_blank" rel="noopener noreferrer">Victor Pessoa</a></p>
+          <p className="mt-2">Feito por <a className="font-bold text-marsala" href="https://github.com/victorpessoa-dev" target="_blank" rel="noopener noreferrer">Victor Pessoa</a></p>
         </div>
       </div>
     </footer>

@@ -39,7 +39,7 @@ export default function About() {
           <h1 className="font-script text-5xl sm:text-6xl text-gray-800 mb-4">
             {aboutInfo?.title || "Sobre Mim"}
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl italic text-gray-600">
             Uma peregrina em busca de Cristo
           </p>
         </div>
