@@ -4,7 +4,7 @@ import { Calendar } from "lucide-react";
 
 export default function BlogCard({ slug, title, createdAt, updatedAt, description, urlImage }) {
   const dateToUse = updatedAt || createdAt;
-  const safeDate = dateToUse ? new Date(dateToUse) : new Date();
+  const safeDate = new Date(dateToUse || Date.now());
 
   return (
     <article className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fadeIn">

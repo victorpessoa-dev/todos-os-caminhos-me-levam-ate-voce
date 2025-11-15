@@ -17,13 +17,11 @@ export async function updateAbout(req) {
     const about = await prisma.about.upsert({
         where: { id: 'about' },
         update: {
-            title: data.title,
             description: data.description ?? '',
             urlImage: data.urlImage ?? null,
         },
         create: {
             id: 'about',
-            title: data.title,
             description: data.description ?? '',
             urlImage: data.urlImage ?? null,
         },
