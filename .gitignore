@@ -1,32 +1,18 @@
-.next
-.node_modules
-
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Editor directories and files
-.idea
-.vscode
-*.suo
-*.ntvs*
-*.njsproj
-
-# OS generated files
-.DS_Store
-Thumbs.db   
-
-# Build output
-dist
-build   
+# v0 sandbox internal files
+__v0_runtime_loader.js
+__v0_devtools.tsx
+__v0_jsx-dev-runtime.ts
+.npmrc
+.snowflake/
+.v0-trash/
+.vercel/
+next.user-config.*
 
 # Environment variables
+.env*.local
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
 
+# Common ignores
+node_modules/
+.next/
+.DS_Store
