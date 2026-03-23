@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Heart, Cross, BookOpen } from "lucide-react";
+import { getAboutInfo } from "../../lib/api/about";
 
 
 export default function About() {
