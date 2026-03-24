@@ -1,8 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Heart, Cross, BookOpen } from "lucide-react";
+import { Heart, BookOpen, Sunrise } from "lucide-react";
 import { getAboutInfo } from "../../lib/api/about";
-
 
 export default function About() {
   const [aboutInfo, setAboutInfo] = useState(null);
@@ -19,14 +18,16 @@ export default function About() {
         setLoading(false);
       }
     }
-
     loadAboutInfo();
   }, []);
 
   if (loading) {
     return (
       <div className="min-h-screen bg-beige flex items-center justify-center">
-        <p className="text-gray-600 text-lg animate-pulse">Carregando...</p>
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-marsala mb-4"></div>
+          <p className="text-gray-600 text-lg">Carregando...</p>
+        </div>
       </div>
     );
   }
@@ -34,10 +35,9 @@ export default function About() {
   return (
     <div className="min-h-screen bg-beige pt-32 pb-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Título */}
         <div className="text-center mb-16 animate-fadeIn">
           <h1 className="font-script text-5xl sm:text-6xl text-gray-800 mb-4">
-            {aboutInfo?.title || "Sobre Mim"}
+            Sobre Mim
           </h1>
           <p className="text-xl italic text-gray-600">
             Uma peregrina em busca de Cristo
@@ -45,14 +45,16 @@ export default function About() {
         </div>
 
         <div className="bg-white rounded-lg shadow-xl overflow-hidden mb-12 animate-fadeIn">
-          <div className="relative h-80">
-            <img
-              src={aboutInfo?.urlImage}
-              alt={aboutInfo?.title || "Imagem do autor"}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-          </div>
+          {aboutInfo?.urlImage && (
+            <div className="relative h-80">
+              <img
+                src={aboutInfo.urlImage}
+                alt="Sobre mim"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            </div>
+          )}
 
           <div className="p-8 sm:p-12">
             {aboutInfo?.description ? (
@@ -61,18 +63,15 @@ export default function About() {
                 dangerouslySetInnerHTML={{ __html: aboutInfo.description }}
               />
             ) : (
-              <p className="text-gray-600">
-                Nenhuma descrição disponível no momento.
-              </p>
+              <p className="text-gray-600">Nenhuma descrição disponível no momento.</p>
             )}
           </div>
         </div>
 
-        {/* Cards de valores */}
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           {[
             {
-              icon: <Cross className="w-12 h-12 text-marsala mx-auto mb-4" />,
+              icon: <Sunrise className="w-12 h-12 text-marsala mx-auto mb-4" />,
               title: "Fé",
               text: "A fé é o alicerce desta jornada. Confio no plano de Deus para minha vida.",
               delay: "0s",
@@ -104,7 +103,7 @@ export default function About() {
 
         <div className="bg-white bg-opacity-70 p-8 rounded-lg">
           <p className="font-script text-2xl text-gray-800 text-center">
-            “Senhor, para onde iremos? Tu tens as palavras da vida eterna.”
+            "Senhor, para onde iremos? Tu tens as palavras da vida eterna."
           </p>
           <p className="text-center text-gray-600 mt-4 italic">João 6, 68</p>
         </div>

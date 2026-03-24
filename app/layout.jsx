@@ -1,11 +1,11 @@
-import './globals.css';
+import "./globals.css";
 
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 export const metadata = {
-    title: 'Todos os Caminhos me levam até Você',
-    description: 'Um diário sobre minha vida com Cristo.',
+    title: "Todos os Caminhos me levam até Você",
+    description: "Um diário sobre minha vida com Cristo.",
 };
 
 export default function RootLayout({ children }) {
@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
         <html lang="pt-BR">
             <body>
                 <Header />
-                <main className="pt-20">{children}</main>
+                <main>{children}</main>
                 <Footer />
             </body>
         </html>

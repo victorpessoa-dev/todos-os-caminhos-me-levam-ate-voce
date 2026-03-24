@@ -60,6 +60,13 @@ export default function Footer() {
           </button>
         </div>
 
+        <Link
+          href="/admin/login"
+          className="inline-block bg-marsala text-white italic px-8 py-4 rounded-full font-medium hover:bg-gray-800 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+        >
+          Área do Administrador
+        </Link>
+
         <div className="text-center text-sm text-gray-600">
           <p>© {new Date().getFullYear()} Todos os Caminhos me levam até Você</p>
           <p className="mt-2">Feito por <a className="font-bold text-marsala" href="https://github.com/victorpessoa-dev" target="_blank" rel="noopener noreferrer">Victor Pessoa</a></p>

@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import BlogCard from "../../components/BlogCard";
+import { getPosts } from "../../lib/api/posts";
 
 export default function Diary() {
   const [posts, setPosts] = useState([]);
@@ -23,7 +24,6 @@ export default function Diary() {
   return (
     <div className="min-h-screen bg-beige pt-32 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Cabeçalho */}
         <div className="text-center mb-16 animate-fadeIn">
           <h1 className="font-script text-5xl sm:text-6xl text-gray-800 mb-4">
             Meu Diário com <span className="text-marsala">Cristo</span>
@@ -35,39 +35,30 @@ export default function Diary() {
 
         {loading && (
           <div className="text-center py-20">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-marsala mb-4"></div>
             <p className="text-gray-600 text-lg">Carregando reflexões...</p>
           </div>
         )}
 
         {!loading && posts.length > 0 && (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map((post) => {
-              const dateToUse = post.dateUpdated || post.dateCreated;
-
-              const formattedDate = dateToUse
-                ? new Date(dateToUse).toLocaleDateString("pt-BR", {
-                  day: "2-digit",
-                  month: "long",
-                  year: "numeric",
-                })
-                : "Data desconhecida";
-
-              return (
-                <BlogCard
-                  key={post.slug}
-                  slug={post.slug}
-                  title={post.title}
-                  date={formattedDate}
-                  description={post.description}
-                  image={post.urlImage}
-                />
-              );
-            })}
+            {posts.map((post) => (
+              <BlogCard
+                key={post.slug}
+                slug={post.slug}
+                title={post.title}
+                description={post.description}
+                urlImage={post.urlImage}
+                createdAt={post.createdAt}
+                updatedAt={post.updatedAt}
+              />
+            ))}
           </div>
         )}
 
         {!loading && posts.length === 0 && (
-          <div className="text-center py-20">
+          <div className="text-center py-20 animate-fadeIn">
+            <div className="text-6xl mb-4">📖</div>
             <p className="text-gray-600 text-lg">
               Ainda não há reflexões publicadas. Volte em breve para ler os primeiros caminhos.
             </p>

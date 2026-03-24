@@ -1,11 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
-import GalleryItem from "../components/GalleryItem";
-import { getGallery } from "../../lib/api";
+import GalleryItem from "../../components/GalleryItem";
+import { getGallery } from "../../lib/api/gallery";
+
+// Campos reais: id, title, urlImage, createdAt, updatedAt
 export default function Gallery() {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   useEffect(() => {
     async function loadGallery() {
       try {
@@ -40,7 +43,6 @@ export default function Gallery() {
       <div className="min-h-screen bg-beige pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center py-20">
-            <div className="text-6xl mb-4">😔</div>
             <p className="text-gray-600 text-lg mb-4">{error}</p>
             <button
               onClick={() => window.location.reload()}
@@ -67,36 +69,32 @@ export default function Gallery() {
         </div>
 
         {images.length > 0 && (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-
-            {images.map((item) => (
-              <GalleryItem
-                key={item.id}
-                image={item.urlImage}
-                caption={item.title || "Momento com Cristo"}
-                reflection={item.title}
-              />
-            ))}
-          </div>
+          <>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {images.map((item) => (
+                <GalleryItem
+                  key={item.id}
+                  image={item.urlImage}
+                  caption={item.title || "Momento com Cristo"}
+                  reflection={item.title}
+                />
+              ))}
+            </div>
+            <div className="text-center mt-12 animate-fadeIn">
+              <p className="text-gray-600 italic">
+                {images.length}{" "}
+                {images.length === 1 ? "momento registrado" : "momentos registrados"}
+              </p>
+            </div>
+          </>
         )}
 
-        {!loading && images.length === 0 && !error && (
+        {images.length === 0 && (
           <div className="text-center py-20 animate-fadeIn">
             <div className="text-6xl mb-4">📷</div>
-            {/* ↑ ÍCONE DE CÂMERA (não livro) */}
-            <p className="text-gray-600 text-lg mb-2">
-              Ainda não há momentos publicados.
-            </p>
+            <p className="text-gray-600 text-lg mb-2">Ainda não há momentos publicados.</p>
             <p className="text-gray-500 text-sm">
               Volte em breve para ver os primeiros registros desta jornada.
-            </p>
-          </div>
-        )}
-
-        {images.length > 0 && (
-          <div className="text-center mt-12 animate-fadeIn">
-            <p className="text-gray-600 italic">
-              {images.length} {images.length === 1 ? "momento registrado" : "momentos registrados"}
             </p>
           </div>
         )}

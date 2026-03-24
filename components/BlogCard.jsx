@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { Calendar } from "lucide-react";
 
+// Props alinhadas com os campos reais do banco: createdAt, updatedAt, urlImage
 export default function BlogCard({ slug, title, createdAt, updatedAt, description, urlImage }) {
   const dateToUse = updatedAt || createdAt;
   const safeDate = new Date(dateToUse || Date.now());

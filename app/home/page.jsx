@@ -1,6 +1,6 @@
 "use client";
-import Link from 'next/link';
-import { Heart } from 'lucide-react';
+import Link from "next/link";
+import { Heart } from "lucide-react";
 
 export default function Home() {
   return (
@@ -18,7 +18,8 @@ export default function Home() {
           <Heart className="w-16 h-16 text-marsala mx-auto mb-6 animate-pulse" />
 
           <h1 className="font-script text-5xl sm:text-6xl md:text-7xl text-gray-800 mb-6 leading-tight">
-            Todos os caminhos me levam até <span className="text-marsala">Você</span>
+            Todos os caminhos me levam até{" "}
+            <span className="text-marsala">Você</span>
           </h1>
 
           <p className="text-xl italic sm:text-2xl text-gray-600 mb-12 font-light">
@@ -33,7 +34,7 @@ export default function Home() {
           </Link>
         </div>
 
-        <div className="absolute bottom-10 center -translate-x-1/2 animate-bounce">
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
           <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex items-start justify-center p-2">
             <div className="w-1 h-3 bg-gray-400 rounded-full"></div>
           </div>
@@ -47,15 +48,17 @@ export default function Home() {
               <div className="text-5xl mb-4">📖</div>
               <h3 className="font-script text-2xl text-gray-800 mb-3">Meu Diário</h3>
               <p className="text-gray-600">
-                Reflexões diárias sobre minha caminhada com Cristo e os ensinamentos que Ele me revela.
+                Reflexões diárias sobre minha caminhada com Cristo e os ensinamentos
+                que Ele me revela.
               </p>
             </div>
 
-            <div className="p-8 animate-fadeIn" style={{ animationDelay: '0.1s' }}>
+            <div className="p-8 animate-fadeIn" style={{ animationDelay: "0.1s" }}>
               <div className="text-5xl mb-4">📷</div>
               <h3 className="font-script text-2xl text-gray-800 mb-3">Galeria</h3>
               <p className="text-gray-600">
-                Momentos capturados em fotos, cada imagem conta uma história de fé e gratidão.
+                Momentos capturados em fotos, cada imagem conta uma história de fé e
+                gratidão.
               </p>
             </div>
           </div>
