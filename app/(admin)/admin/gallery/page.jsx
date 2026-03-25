@@ -1,8 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
-import { getGallery, addGalleryItem, deleteGalleryItem } from "../../../lib/api/gallery";
 
-// Campos reais: id, title, urlImage, createdAt, updatedAt, user_id
+import { useState, useEffect } from "react";
+import { getGallery, addGalleryItem, deleteGalleryItem } from "../../../../lib/api/gallery";
+
 export default function AdminGallery() {
     const [images, setImages] = useState([]);
     const [form, setForm] = useState({ title: "", urlImage: "" });

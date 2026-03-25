@@ -1,8 +1,5 @@
 import "./globals.css";
 
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-
 export const metadata = {
     title: "Todos os Caminhos me levam até Você",
     description: "Um diário sobre minha vida com Cristo.",
@@ -11,11 +8,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
     return (
         <html lang="pt-BR">
-            <body>
-                <Header />
-                <main>{children}</main>
-                <Footer />
-            </body>
+            <body>{children}</body>
         </html>
     );
 }

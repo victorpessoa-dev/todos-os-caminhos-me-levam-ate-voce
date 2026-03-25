@@ -1,9 +1,9 @@
 "use client";
-import { useState, useEffect } from "react";
-import GalleryItem from "../../components/GalleryItem";
-import { getGallery } from "../../lib/api/gallery";
 
-// Campos reais: id, title, urlImage, createdAt, updatedAt
+import { useState, useEffect } from "react";
+import GalleryItem from "../../../components/GalleryItem";
+import { getGallery } from "../../../lib/api/gallery";
+
 export default function Gallery() {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);

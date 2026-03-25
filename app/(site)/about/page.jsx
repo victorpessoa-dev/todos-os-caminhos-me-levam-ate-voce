@@ -1,7 +1,8 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { Heart, BookOpen, Sunrise } from "lucide-react";
-import { getAboutInfo } from "../../lib/api/about";
+import { getAboutInfo } from "../../../lib/api/about";
 
 export default function About() {
   const [aboutInfo, setAboutInfo] = useState(null);

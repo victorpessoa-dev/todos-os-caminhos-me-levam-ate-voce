@@ -1,7 +1,8 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getPosts, deletePost } from "../../../lib/api/posts";
+import { getPosts, deletePost } from "../../../../lib/api/posts";
 
 export default function AdminPosts() {
     const [posts, setPosts] = useState([]);

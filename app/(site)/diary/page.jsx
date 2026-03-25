@@ -1,7 +1,8 @@
 "use client";
+
 import { useState, useEffect } from "react";
-import BlogCard from "../../components/BlogCard";
-import { getPosts } from "../../lib/api/posts";
+import BlogCard from "../../../components/BlogCard";
+import { getPosts } from "../../../lib/api/posts";
 
 export default function Diary() {
   const [posts, setPosts] = useState([]);

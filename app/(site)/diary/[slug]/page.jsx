@@ -1,9 +1,10 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, CalendarDays } from "lucide-react";
-import { getPostBySlug } from "../../../lib/api/posts";
+import { getPostBySlug } from "../../../../lib/api/posts";
 
 export default function DiaryPost() {
     const { slug } = useParams();

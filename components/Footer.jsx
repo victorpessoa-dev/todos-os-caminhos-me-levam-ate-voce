@@ -60,12 +60,11 @@ export default function Footer() {
           </button>
         </div>
 
-        <Link
-          href="/admin/login"
-          className="inline-block bg-marsala text-white italic px-8 py-4 rounded-full font-medium hover:bg-gray-800 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
-        >
-          Área do Administrador
-        </Link>
+        <div className="text-center mb-6">
+          <a href="/login" className="underline font-medium text-gray-600 hover:text-marsala transition-colors duration-300">
+            Área do Cliente
+          </a>
+        </div>
 
         <div className="text-center text-sm text-gray-600">
           <p>© {new Date().getFullYear()} Todos os Caminhos me levam até Você</p>
