@@ -4,16 +4,8 @@ import { useEffect, useState, useCallback } from "react";
 import GalleryItem from "../../../components/GalleryItem";
 import { getGallery } from "../../../services/gallery";
 import { sanitizeImageUrl } from "../../../lib/content";
-import { buildMetadata } from "../../../lib/site";
-
-export const metadata = buildMetadata({
-    title: "Galeria",
-    description: "Momentos e imagens que acompanham a jornada do diário com Cristo.",
-    path: "/gallery",
-});
 
 export const revalidate = 300;
-
 
 export default function Gallery() {
     const [images, setImages] = useState([]);
