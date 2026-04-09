@@ -9,12 +9,22 @@ export const metadata = buildMetadata({
 });
 
 export const revalidate = 300;
+export const POSTS_PER_PAGE = 10;
 
-export default async function Diary() {
+export default async function Diary({ searchParams }) {
+    const currentPage = Number(searchParams?.page || 1);
+
     let posts = [];
+    let totalPages = 0;
 
     try {
-        posts = await getPublishedPosts();
+        const { posts: data, total } = await getPublishedPosts({
+            page: currentPage,
+            limit: POSTS_PER_PAGE,
+        });
+
+        posts = data;
+        totalPages = Math.ceil(total / POSTS_PER_PAGE);
     } catch (error) {
         console.error("Erro ao carregar posts:", error);
     }
@@ -32,21 +42,37 @@ export default async function Diary() {
                 </div>
 
                 {posts.length > 0 && (
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {posts.map((post) => (
-                            <BlogCard
-                                key={post.id}
-                                slug={post.slug}
-                                title={post.title}
-                                description={post.description}
-                                cover_image={post.cover_image}
-                                cover_image_alt={post.cover_image_alt}
-                                published_at={post.published_at}
-                                created_at={post.created_at}
-                                updated_at={post.updated_at}
-                            />
-                        ))}
-                    </div>
+                    <>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {posts.map((post) => (
+                                <BlogCard key={post.id} {...post} />
+                            ))}
+                        </div>
+
+                        <div className="flex justify-center items-center gap-4 mt-12">
+                            {currentPage > 1 && (
+                                <a
+                                    href={`?page=${currentPage - 1}`}
+                                    className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
+                                >
+                                    ← Anterior
+                                </a>
+                            )}
+
+                            <span className="text-gray-600 text-sm">
+                                Página {currentPage} de {totalPages}
+                            </span>
+
+                            {currentPage < totalPages && (
+                                <a
+                                    href={`?page=${currentPage + 1}`}
+                                    className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
+                                >
+                                    Próxima →
+                                </a>
+                            )}
+                        </div>
+                    </>
                 )}
 
                 {posts.length === 0 && (
