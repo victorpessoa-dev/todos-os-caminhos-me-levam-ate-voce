@@ -46,8 +46,8 @@ export default async function DiaryPost({ params }) {
     const safeContent = sanitizeHtml(post.content);
 
     return (
-        <div className="min-h-screen bg-beige pt-32 pb-20">
-            <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-beige pt-5 pb-10">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 <Link
                     href="/diary"
                     className="btn-ghost -ml-3 text-gray-500 hover:text-marsala mb-10 group"
@@ -67,6 +67,18 @@ export default async function DiaryPost({ params }) {
                             })}
                         </time>
                     </div>
+
+                    {safeCoverImage && (
+                        <div className="relative rounded-lg overflow-hidden shadow-xl mb-12 animate-fadeIn">
+                            <img
+                                src={safeCoverImage}
+                                alt={post.cover_image_alt || post.title}
+                                className="w-full h-72 sm:h-96 object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                        </div>
+                    )}
+
                     <h1 className="font-script text-3xl sm:text-4xl md:text-5xl text-gray-800 mb-6 leading-tight">
                         {post.title}
                     </h1>
@@ -77,16 +89,6 @@ export default async function DiaryPost({ params }) {
                     )}
                 </div>
 
-                {safeCoverImage && (
-                    <div className="relative rounded-lg overflow-hidden shadow-xl mb-12 animate-fadeIn">
-                        <img
-                            src={safeCoverImage}
-                            alt={post.cover_image_alt || post.title}
-                            className="w-full h-72 sm:h-96 object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                    </div>
-                )}
 
                 <div className="bg-white rounded-lg shadow-md p-8 sm:p-12 animate-fadeIn">
                     {safeContent ? (

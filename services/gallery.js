@@ -7,7 +7,7 @@ const DEFAULT_GALLERY_LIMIT = 20;
 const GALLERY_FIELDS =
     "id, title, image_url, image_alt, created_at, updated_at";
 
-function applyGalleryRange(query, page = 1, limit = DEFAULT_GALLERY_LIMIT) {
+function applyRange(query, page = 1, limit = DEFAULT_GALLERY_LIMIT) {
     const safePage = Math.max(1, Number(page) || 1);
     const safeLimit = Math.max(1, Number(limit) || DEFAULT_GALLERY_LIMIT);
 
@@ -23,33 +23,38 @@ export async function getGallery({
 } = {}) {
     const query = supabase
         .from("gallery")
-        .select(GALLERY_FIELDS, { count: "exact" })
+        .select(GALLERY_FIELDS)
         .order("created_at", { ascending: false });
 
-    const { data, error, count } = await applyGalleryRange(
-        query,
-        page,
-        limit
-    );
+    const { data, error } = await applyRange(query, page, limit);
 
-    if (error) {
-        console.error("Erro ao buscar galeria:", error);
-        throw error;
-    }
+    if (error) throw error;
 
     return {
         items: data || [],
-        total: count || 0,
-        page: Math.max(1, Number(page) || 1),
-        limit: Math.max(1, Number(limit) || DEFAULT_GALLERY_LIMIT),
+        hasMore: (data || []).length === limit,
     };
 }
 
 export async function addGalleryItem(payload) {
+    const {
+        data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session?.user?.id) {
+        throw new Error("Usuário não autenticado");
+    }
+
     const sanitizedPayload = {
         ...payload,
-        title: typeof payload.title === "string" ? payload.title.trim() : null,
-        image_url: normalizeImageUrlInput(payload.image_url, { required: true }),
+        user_id: session.user.id,
+        title:
+            typeof payload.title === "string"
+                ? payload.title.trim()
+                : null,
+        image_url: normalizeImageUrlInput(payload.image_url, {
+            required: true,
+        }),
         image_alt:
             typeof payload.image_alt === "string"
                 ? payload.image_alt.trim()
@@ -68,16 +73,12 @@ export async function addGalleryItem(payload) {
 }
 
 export async function deleteGalleryItem(id) {
-    const { data: item, error: fetchError } = await supabase
+    const { data: item } = await supabase
         .from("gallery")
-        .select("id, image_url")
+        .select("image_url")
         .eq("id", id)
-        .limit(1)
         .maybeSingle();
 
-    if (fetchError) throw fetchError;
-
-    // remove imagem do storage
     if (item?.image_url) {
         await deletePostImageByUrl(item.image_url);
     }

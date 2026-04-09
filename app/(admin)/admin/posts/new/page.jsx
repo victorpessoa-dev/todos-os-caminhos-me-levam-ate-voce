@@ -15,6 +15,16 @@ function slugify(value) {
         .replace(/^-+|-+$/g, "");
 }
 
+function normalizeContent(text) {
+    if (!text) return "";
+
+    return text
+        .replace(/\r\n/g, "\n")
+        .replace(/\n{3,}/g, "\n\n")
+        .replace(/>\s+</g, "><")
+        .trim();
+}
+
 export default function AdminNewPost() {
     const router = useRouter();
     const [title, setTitle] = useState("");
@@ -47,7 +57,7 @@ export default function AdminNewPost() {
                 title: title.trim(),
                 slug: finalSlug,
                 description: description.trim() || "",
-                content: content.trim() || "",
+                content: normalizeContent(content),
                 cover_image: coverImage.trim() || null,
                 cover_image_alt: coverImageAlt.trim() || null,
                 status,

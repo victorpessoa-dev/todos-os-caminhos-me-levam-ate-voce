@@ -22,20 +22,23 @@ export default function AdminEditPost() {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        if (!id) {
-            setLoadError(true);
-            setLoading(false);
-            return;
-        }
+        if (!id) return;
+
         let cancelled = false;
+
         async function load() {
             try {
+                setLoading(true);
+
                 const post = await getPostById(id);
+
                 if (cancelled) return;
+
                 if (!post) {
                     setLoadError(true);
                     return;
                 }
+
                 setTitle(post.title || "");
                 setSlug(post.slug || "");
                 setDescription(post.description || "");
@@ -44,13 +47,16 @@ export default function AdminEditPost() {
                 setCoverImageAlt(post.cover_image_alt || "");
                 setStatus(post.status || "draft");
                 setPublishedAt(post.published_at || null);
+
             } catch {
                 if (!cancelled) setLoadError(true);
             } finally {
                 if (!cancelled) setLoading(false);
             }
         }
+
         load();
+
         return () => {
             cancelled = true;
         };
@@ -120,11 +126,10 @@ export default function AdminEditPost() {
             <div className="mx-auto max-w-3xl">
                 <h1 className="text-2xl font-semibold text-gray-900 sm:text-3xl">Editar post</h1>
                 <p
-                    className={`mb-6 mt-2 rounded-lg border px-3 py-2.5 text-sm ${
-                        status === "published"
+                    className={`mb-6 mt-2 rounded-lg border px-3 py-2.5 text-sm ${status === "published"
                             ? "border-green-200 bg-green-50 text-green-800"
                             : "border-amber-200 bg-amber-50 text-amber-900"
-                    }`}
+                        }`}
                 >
                     {status === "published"
                         ? "Publicado - visivel para todos no site."

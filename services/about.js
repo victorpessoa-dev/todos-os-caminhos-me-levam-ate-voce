@@ -5,15 +5,11 @@ import { deletePostImageByUrl } from "./storage";
 export async function getAboutInfo() {
     const { data, error } = await supabase
         .from("about")
-        .select("id, description, image_url, created_at, updated_at")
-        .order("created_at", { ascending: false })
+        .select("*")
         .limit(1)
         .maybeSingle();
 
-    if (error) {
-        console.error("Erro ao buscar about:", error);
-        return null;
-    }
+    if (error) return null;
 
     return data;
 }
@@ -26,13 +22,11 @@ export async function upsertAbout(id, payload) {
     };
 
     if (id) {
-        const { data: previousAbout, error: previousAboutError } = await supabase
+        const { data: previous } = await supabase
             .from("about")
-            .select("id, image_url")
+            .select("image_url")
             .eq("id", id)
             .maybeSingle();
-
-        if (previousAboutError) throw previousAboutError;
 
         const { data, error } = await supabase
             .from("about")
@@ -40,19 +34,23 @@ export async function upsertAbout(id, payload) {
             .eq("id", id)
             .select()
             .single();
+
         if (error) throw error;
 
-        if (previousAbout?.image_url && previousAbout.image_url !== data?.image_url) {
-            await deletePostImageByUrl(previousAbout.image_url);
+        if (previous?.image_url && previous.image_url !== data?.image_url) {
+            await deletePostImageByUrl(previous.image_url);
         }
 
         return data;
     }
+
     const { data, error } = await supabase
         .from("about")
         .insert(sanitizedPayload)
         .select()
         .single();
+
     if (error) throw error;
+
     return data;
 }
