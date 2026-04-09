@@ -1,85 +1,133 @@
-import BlogCard from "../../../components/BlogCard";
-import { getPublishedPosts } from "../../../services/posts";
+import GalleryItem from "../../../components/GalleryItem";
+import { getGallery } from "../../../services/gallery";
+import { sanitizeImageUrl } from "../../../lib/content";
 import { buildMetadata } from "../../../lib/site";
 
 export const metadata = buildMetadata({
-    title: "Diário",
-    description: "Leia os posts publicados do diário e acompanhe reflexões sobre a caminhada com Cristo.",
-    path: "/diary",
+    title: "Galeria",
+    description: "Momentos e imagens que acompanham a jornada do diário com Cristo.",
+    path: "/gallery",
 });
 
 export const revalidate = 300;
-export const POSTS_PER_PAGE = 10;
 
-export default async function Diary({ searchParams }) {
-    const currentPage = Number(searchParams?.page || 1);
-
-    let posts = [];
-    let totalPages = 0;
+export default async function Gallery() {
+    let images = [];
+    let total = 0;
 
     try {
-        const { posts: data, total } = await getPublishedPosts({
-            page: currentPage,
-            limit: POSTS_PER_PAGE,
-        });
-
-        posts = data;
-        totalPages = Math.ceil(total / POSTS_PER_PAGE);
+        const { items, total: count } = await getGallery({ page: 1 });
+        images = items;
+        total = count;
     } catch (error) {
-        console.error("Erro ao carregar posts:", error);
+        console.error("Erro ao carregar galeria:", error);
     }
+
+    return <GalleryClient initialImages={images} total={total} />;
+}
+
+function GalleryClient({ initialImages, total }) {
+    "use client";
+
+    const { useEffect, useState, useCallback } = require("react");
+
+    const [images, setImages] = useState(initialImages);
+    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(false);
+
+    const loadImages = useCallback(async (currentPage) => {
+        if (loading) return;
+
+        setLoading(true);
+
+        try {
+            const { items } = await getGallery({
+                page: currentPage,
+            });
+
+            setImages((prev) => [...prev, ...items]);
+            setPage(currentPage);
+        } catch (error) {
+            console.error("Erro ao carregar galeria:", error);
+        }
+
+        setLoading(false);
+    }, [loading]);
+
+    useEffect(() => {
+        function handleScroll() {
+            if (
+                window.innerHeight + window.scrollY >=
+                document.body.offsetHeight - 200
+            ) {
+                if (images.length < total && !loading) {
+                    loadImages(page + 1);
+                }
+            }
+        }
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [images, total, page, loading, loadImages]);
+
+    const itemsWithUrl = images
+        .map((item) => ({
+            ...item,
+            safeImageUrl: sanitizeImageUrl(item.image_url),
+        }))
+        .filter((item) => item.safeImageUrl);
 
     return (
         <div className="min-h-screen bg-beige pt-32 pb-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-16 animate-fadeIn">
                     <h1 className="page-title">
-                        Meu Diário com <span className="text-marsala">Cristo</span>
+                        Meus momentos com <span className="text-marsala">Cristo</span>
                     </h1>
                     <p className="page-lead italic">
-                        Reflexões sobre os caminhos que me levam até Ele, escritas com o coração.
+                        Momentos que me levam até Ele, vividos com o coração.
                     </p>
                 </div>
 
-                {posts.length > 0 && (
+                {itemsWithUrl.length > 0 && (
                     <>
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {posts.map((post) => (
-                                <BlogCard key={post.id} {...post} />
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                            {itemsWithUrl.map((item) => (
+                                <GalleryItem
+                                    key={item.id}
+                                    image={item.safeImageUrl}
+                                    caption={item.title || "Momento com Cristo"}
+                                    altText={item.image_alt}
+                                    reflection={item.title}
+                                />
                             ))}
                         </div>
 
-                        <div className="flex justify-center items-center gap-4 mt-12">
-                            {currentPage > 1 && (
-                                <a
-                                    href={`?page=${currentPage - 1}`}
-                                    className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
-                                >
-                                    ← Anterior
-                                </a>
-                            )}
-
-                            <span className="text-gray-600 text-sm">
-                                Página {currentPage} de {totalPages}
-                            </span>
-
-                            {currentPage < totalPages && (
-                                <a
-                                    href={`?page=${currentPage + 1}`}
-                                    className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
-                                >
-                                    Próxima →
-                                </a>
-                            )}
+                        <div className="text-center mt-12 animate-fadeIn">
+                            <p className="text-sm sm:text-base text-gray-600 italic">
+                                {itemsWithUrl.length}{" "}
+                                {itemsWithUrl.length === 1
+                                    ? "momento registrado"
+                                    : "momentos registrados"}
+                            </p>
                         </div>
+
+                        {loading && (
+                            <div className="text-center mt-6 text-gray-500">
+                                Carregando mais...
+                            </div>
+                        )}
                     </>
                 )}
 
-                {posts.length === 0 && (
+                {itemsWithUrl.length === 0 && !loading && (
                     <div className="text-center py-20 animate-fadeIn">
-                        <div className="text-6xl mb-4">📖</div>
-                        <p className="text-gray-600 text-base max-w-md mx-auto leading-relaxed">
-                            Ainda não há reflexões publicadas. Volte em breve para ler os primeiros caminhos.
+                        <div className="text-6xl mb-4">📷</div>
+                        <p className="text-gray-600 text-base mb-2">
+                            Ainda não há momentos publicados.
+                        </p>
+                        <p className="text-gray-500 text-sm leading-relaxed max-w-sm mx-auto">
+                            Volte em breve para ver os primeiros registros desta jornada.
                         </p>
                     </div>
                 )}
