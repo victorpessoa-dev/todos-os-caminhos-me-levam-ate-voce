@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Love+Light&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Love+Light&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -10,7 +10,109 @@
     }
 
     body {
-        @apply font-sans text-gray-800 antialiased;
+        @apply font-sans text-base leading-relaxed text-gray-800 antialiased;
+    }
+
+    h1,
+    h2,
+    h3 {
+        @apply text-gray-900;
+    }
+}
+
+@layer components {
+    /* Tipografia de página (público) */
+    .page-title {
+        @apply font-script text-3xl sm:text-5xl text-gray-800 mb-3 tracking-tight;
+    }
+
+    .page-lead {
+        @apply text-sm sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed;
+    }
+
+    .hero-title {
+        @apply font-script text-3xl sm:text-6xl md:text-7xl text-gray-800 mb-5 sm:mb-6 leading-tight;
+    }
+
+    .hero-lead {
+        @apply text-base sm:text-xl text-gray-600 mb-8 sm:mb-10 max-w-xl mx-auto leading-relaxed;
+    }
+
+    .section-card-title {
+        @apply font-script text-xl sm:text-2xl text-gray-800 mb-3;
+    }
+
+    /* Botões: use "btn btn-primary" (base + variante) */
+    .btn {
+        @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium transition-all duration-200;
+        @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-marsala focus-visible:ring-offset-2;
+    }
+
+    .btn-primary {
+        @apply bg-marsala text-white shadow-sm;
+        @apply hover:bg-marsala-dark hover:shadow-md active:scale-[0.99];
+    }
+
+    .btn-secondary {
+        @apply border-2 border-marsala bg-white text-marsala;
+        @apply hover:bg-marsala/5 active:bg-marsala/10;
+    }
+
+    .btn-outline {
+        @apply border border-gray-300 bg-white text-gray-700;
+        @apply hover:border-marsala hover:text-marsala hover:bg-beige/50;
+    }
+
+    .btn-ghost {
+        @apply inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors;
+        @apply hover:bg-gray-100 hover:text-marsala;
+        @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-marsala focus-visible:ring-offset-2;
+    }
+
+    .btn-danger {
+        @apply border-2 border-red-600 bg-white text-red-600;
+        @apply hover:bg-red-50 focus-visible:ring-red-600;
+    }
+
+    .btn-hero {
+        @apply inline-flex items-center justify-center rounded-full bg-marsala px-8 py-4 text-base font-medium italic text-white;
+        @apply shadow-lg transition-all duration-300 hover:scale-105 hover:bg-gray-800 hover:shadow-xl;
+        @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-marsala focus-visible:ring-offset-2;
+    }
+
+    .btn-icon {
+        @apply inline-flex items-center justify-center rounded-full p-3 text-gray-700 bg-white shadow-sm border border-gray-100 transition-all duration-200;
+        @apply hover:bg-marsala hover:text-white hover:border-marsala hover:shadow-md;
+        @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-marsala focus-visible:ring-offset-2;
+    }
+
+    /* Links de navegação (header) */
+    .nav-link {
+        @apply text-sm font-medium text-gray-700 transition-colors rounded-md px-1 py-0.5;
+        @apply hover:text-marsala focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-marsala focus-visible:ring-offset-2;
+    }
+
+    .nav-link-active {
+        @apply text-sm font-medium text-marsala border-b-2 border-marsala pb-1 transition-colors;
+        @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-marsala focus-visible:ring-offset-2 rounded-sm;
+    }
+
+    /* Formulários (admin) */
+    .input-field {
+        @apply w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-800 bg-white transition-shadow;
+        @apply focus:border-marsala focus:outline-none focus:ring-2 focus:ring-marsala/20;
+    }
+
+    select.input-field {
+        @apply cursor-pointer;
+    }
+
+    .label-field {
+        @apply block text-sm font-medium text-gray-700 mb-1;
+    }
+
+    .admin-card {
+        @apply rounded-lg border border-gray-200 bg-white shadow-sm;
     }
 }
 
@@ -28,7 +130,6 @@
     }
 
     @keyframes float {
-
         0%,
         100% {
             transform: translateY(0px);

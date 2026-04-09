@@ -18,35 +18,26 @@ export default function Home() {
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto animate-fadeIn">
           <Heart className="w-16 h-16 text-marsala mx-auto mb-6 animate-pulse" />
 
-          <h1 className="font-script text-5xl sm:text-6xl md:text-7xl text-gray-800 mb-6 leading-tight">
+          <h1 className="hero-title">
             Todos os caminhos me levam até{" "}
             <span className="text-marsala">Você</span>
           </h1>
 
-          <p className="text-xl italic sm:text-2xl text-gray-600 mb-12 font-light">
-            Um diário sobre minha vida com Cristo.
+          <p className="hero-lead italic text-gray-600 mb-12">
+            Painel do site — gerencie posts, galeria e página sobre.
           </p>
 
-          <Link
-            href="/admin/posts"
-            className="inline-block bg-marsala text-white italic px-8 py-4 rounded-full font-medium hover:bg-gray-800 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
-          >
-            Posts
-          </Link>
-
-          <Link
-            href="/admin/gallery"
-            className="inline-block bg-marsala text-white italic px-8 py-4 rounded-full font-medium hover:bg-gray-800 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
-          >
-            Galeria
-          </Link>
-
-          <Link
-            href="/admin/about"
-            className="inline-block bg-marsala text-white italic px-8 py-4 rounded-full font-medium hover:bg-gray-800 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
-          >
-            Sobre Mim
-          </Link>
+          <div className="flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row sm:flex-wrap">
+            <Link href="/admin/posts" className="btn-hero w-full sm:w-auto">
+              Posts
+            </Link>
+            <Link href="/admin/gallery" className="btn-hero w-full sm:w-auto">
+              Galeria
+            </Link>
+            <Link href="/admin/about" className="btn-hero w-full sm:w-auto">
+              Sobre mim
+            </Link>
+          </div>
         </div>
       </section>
     </div>
