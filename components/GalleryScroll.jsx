@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import GalleryItem from "../components/GalleryItem";
 import { getGallery } from "../services/gallery";
-import { sanitizeImageUrl } from "../../../lib/content";
+import { sanitizeImageUrl } from "../lib/content";
 
 export default function GalleryScroll({ initialImages, total }) {
     const [images, setImages] = useState(initialImages);
