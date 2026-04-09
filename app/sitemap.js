@@ -1,5 +1,5 @@
 import { getAbsoluteUrl } from "../lib/site";
-import { getPublishedPosts } from "../services/posts";
+import { getPublishedPostSlugs } from "../services/posts";
 
 export default async function sitemap() {
     const now = new Date();
@@ -11,7 +11,7 @@ export default async function sitemap() {
     let posts = [];
 
     try {
-        posts = await getPublishedPosts();
+        posts = await getPublishedPostSlugs();
     } catch (error) {
         console.error("Erro ao gerar sitemap:", error);
     }

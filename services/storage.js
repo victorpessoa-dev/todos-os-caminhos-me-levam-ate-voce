@@ -8,11 +8,6 @@ function sanitizeBaseName(name) {
     return base.slice(0, 48) || "imagem";
 }
 
-/**
- * Envia imagem para o bucket público `post-images` (usuário autenticado).
- * @param {File} file
- * @param {string} subfolder ex.: "covers", "gallery", "about"
- */
 export async function uploadPostImage(file, subfolder = "uploads") {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.user?.id) {

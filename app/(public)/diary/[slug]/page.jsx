@@ -3,12 +3,12 @@ import { ArrowLeft, CalendarDays } from "lucide-react";
 import { notFound } from "next/navigation";
 import { sanitizeHtml, sanitizeImageUrl } from "../../../../lib/content";
 import { buildMetadata } from "../../../../lib/site";
-import { getPublishedPostBySlug, getPublishedPosts } from "../../../../services/posts";
+import { getPublishedPostBySlug, getPublishedPostSlugs } from "../../../../services/posts";
 
 export const revalidate = 300;
 
 export async function generateStaticParams() {
-    const posts = await getPublishedPosts();
+    const posts = await getPublishedPostSlugs();
     return posts.map((post) => ({ slug: post.slug }));
 }
 
