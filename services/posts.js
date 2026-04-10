@@ -5,7 +5,6 @@ import { deletePostImageByUrl } from "./storage";
 const DEFAULT_PUBLIC_POSTS_LIMIT = 10;
 const DEFAULT_ADMIN_POSTS_LIMIT = 30;
 
-// 🔥 SELECT OTIMIZADO (menos dados)
 const PUBLIC_POST_CARD_FIELDS =
     "id, title, slug, cover_image, published_at";
 
@@ -28,6 +27,7 @@ function applyRange(query, page = 1, limit = DEFAULT_PUBLIC_POSTS_LIMIT) {
     return query.range(from, to);
 }
 
+
 export async function getPublishedPosts({
     page = 1,
     limit = DEFAULT_PUBLIC_POSTS_LIMIT,
@@ -41,7 +41,7 @@ export async function getPublishedPosts({
     const { data, error } = await applyRange(query, page, limit);
 
     if (error) {
-        console.error("Erro ao buscar posts publicados:", error);
+        console.error("Erro ao buscar posts:", error);
         throw error;
     }
 
@@ -60,26 +60,30 @@ export async function getPublishedPostBySlug(slug) {
         .limit(1)
         .maybeSingle();
 
-    if (error) throw error;
+    if (error) {
+        console.error("Erro ao buscar post por slug:", error);
+        throw error;
+    }
+
     return data;
 }
 
 export async function getPublishedPostSlugs({ limit = 200 } = {}) {
     const { data, error } = await supabase
         .from("posts")
-        .select("slug, published_at, created_at")
+        .select("slug")
         .eq("status", "published")
-        .order("published_at", { ascending: false, nullsFirst: false })
-        .order("created_at", { ascending: false })
+        .order("published_at", { ascending: false })
         .limit(Math.max(1, Number(limit) || 200));
 
     if (error) {
-        console.error("Erro ao buscar slugs publicados:", error);
+        console.error("Erro ao buscar slugs:", error);
         throw error;
     }
 
     return data || [];
 }
+
 
 export async function getPosts({
     page = 1,
@@ -92,17 +96,20 @@ export async function getPosts({
 
     const { data, error } = await applyRange(query, page, limit);
 
-    if (error) throw error;
+    if (error) {
+        console.error("Erro ao buscar posts admin:", error);
+        throw error;
+    }
 
     return data || [];
 }
 
 export async function getPostById(id) {
+    if (!id) return null;
+
     const { data, error } = await supabase
         .from("posts")
-        .select(
-            "id, title, slug, description, content, cover_image, cover_image_alt, status, published_at"
-        )
+        .select(ADMIN_DETAIL_FIELDS)
         .eq("id", id)
         .limit(1)
         .maybeSingle();
@@ -115,8 +122,15 @@ export async function getPostById(id) {
     return data;
 }
 
+
 export async function createPost(payload) {
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+        data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session?.user?.id) {
+        throw new Error("Usuário não autenticado");
+    }
 
     const sanitizedPayload = {
         ...payload,
@@ -133,16 +147,28 @@ export async function createPost(payload) {
         .select(ADMIN_DETAIL_FIELDS)
         .single();
 
-    if (error) throw error;
+    if (error) {
+        console.error("Erro ao criar post:", error);
+        throw error;
+    }
+
     return data;
 }
 
+
 export async function updatePost(id, payload) {
-    const { data: previous } = await supabase
+    if (!id) throw new Error("ID inválido");
+
+    const { data: previous, error: prevError } = await supabase
         .from("posts")
         .select("cover_image")
         .eq("id", id)
         .maybeSingle();
+
+    if (prevError) {
+        console.error("Erro ao buscar post anterior:", prevError);
+        throw prevError;
+    }
 
     const sanitizedPayload = {
         ...payload,
@@ -159,26 +185,68 @@ export async function updatePost(id, payload) {
         .select(ADMIN_DETAIL_FIELDS)
         .single();
 
-    if (error) throw error;
+    if (error) {
+        console.error("Erro ao atualizar post:", error);
+        throw error;
+    }
 
     if (previous?.cover_image && previous.cover_image !== data?.cover_image) {
-        await deletePostImageByUrl(previous.cover_image);
+        try {
+            await deletePostImageByUrl(previous.cover_image);
+        } catch (err) {
+            console.warn("Erro ao deletar imagem antiga:", err);
+        }
     }
 
     return data;
 }
 
-export async function deletePost(id) {
-    const { data: post } = await supabase
-        .from("posts")
-        .select("cover_image")
-        .eq("id", id)
-        .maybeSingle();
 
-    if (post?.cover_image) {
-        await deletePostImageByUrl(post.cover_image);
+export async function deletePost(id) {
+    if (!id) throw new Error("ID inválido");
+
+    const {
+        data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session?.user?.id) {
+        throw new Error("Usuário não autenticado");
     }
 
-    const { error } = await supabase.from("posts").delete().eq("id", id);
-    if (error) throw error;
+    const { data: post, error: fetchError } = await supabase
+        .from("posts")
+        .select("id, cover_image, user_id")
+        .eq("id", id)
+        .eq("user_id", session.user.id)
+        .maybeSingle();
+
+    if (fetchError) {
+        console.error("Erro ao buscar post:", fetchError);
+        throw fetchError;
+    }
+
+    if (!post) {
+        throw new Error("Post não encontrado ou sem permissão");
+    }
+
+    if (post.cover_image) {
+        try {
+            await deletePostImageByUrl(post.cover_image);
+        } catch (err) {
+            console.warn("Erro ao deletar imagem:", err);
+        }
+    }
+
+    const { error } = await supabase
+        .from("posts")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", session.user.id);
+
+    if (error) {
+        console.error("Erro ao deletar post:", error);
+        throw error;
+    }
+
+    return true;
 }
