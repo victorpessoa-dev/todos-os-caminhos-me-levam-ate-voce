@@ -32,7 +32,7 @@ export default function AdminHeader() {
 
     try {
       await supabase.auth.signOut();
-      router.replace("/login");
+      router.replace("/admin/login");
     } catch (error) {
       console.error("Erro ao sair:", error);
     } finally {

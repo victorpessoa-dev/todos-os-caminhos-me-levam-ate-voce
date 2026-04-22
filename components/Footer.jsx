@@ -62,15 +62,6 @@ export default function Footer() {
           </button>
         </div>
 
-        <div className="text-center mb-6">
-          <a
-            href="/login"
-            className="text-sm font-medium text-gray-600 hover:text-marsala underline-offset-2 hover:underline transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-marsala focus-visible:ring-offset-2"
-          >
-            Área do Cliente
-          </a>
-        </div>
-
         <div className="text-center text-xs sm:text-sm text-gray-600">
           <p>© {new Date().getFullYear()} Todos os Caminhos me levam até Você</p>
           <p className="mt-2">Feito por <a className="font-bold text-marsala" href="https://github.com/victorpessoa-dev" target="_blank" rel="noopener noreferrer">Victor Pessoa</a></p>

@@ -142,7 +142,7 @@ USING (user_id = auth.uid());
 CREATE POLICY "Public can read published posts"
 ON public.posts
 FOR SELECT
-TO anon, authenticated
+TO anon
 USING (
     status = 'published'
     OR public.is_admin()
@@ -170,7 +170,7 @@ USING (public.is_admin());
 CREATE POLICY "Public can read gallery"
 ON public.gallery
 FOR SELECT
-TO anon, authenticated
+TO anon
 USING (true);
 
 CREATE POLICY "Admins can insert gallery"
@@ -195,7 +195,7 @@ USING (public.is_admin());
 CREATE POLICY "Public can read about"
 ON public.about
 FOR SELECT
-TO anon, authenticated
+TO anon
 USING (true);
 
 CREATE POLICY "Admins can insert about"

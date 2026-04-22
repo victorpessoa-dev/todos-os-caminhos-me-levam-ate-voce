@@ -17,7 +17,7 @@ export async function uploadPostImage(file, subfolder = "uploads") {
     } = await supabase.auth.getSession();
 
     if (!session?.user?.id) {
-        throw new Error("Faça login para enviar imagens.");
+        throw new Error("Faça login de administrador para enviar imagens.");
     }
 
     const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
