@@ -63,7 +63,7 @@ export default function Footer() {
         </div>
 
         <div className="text-center mb-6">
-          <a href="/admin/login" className="underline font-medium text-gray-600 hover:text-marsala transition-colors duration-300">Acesso ao painel</a>
+          <a href="/login" className="underline font-medium text-gray-600 hover:text-marsala transition-colors duration-300">Acesso ao painel</a>
         </div>
 
         <div className="text-center text-xs sm:text-sm text-gray-600">
