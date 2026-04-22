@@ -55,8 +55,13 @@ export default function AdminNewPost() {
                 published_at: status === "published" ? new Date().toISOString() : null,
             });
             router.push("/admin/posts");
-        } catch {
-            setError("Erro ao criar post. Verifique se o slug ja existe.");
+        } catch (err) {
+            if (err?.message === "SLUG_DUPLICADO") {
+                setError("Já existe um post com esse slug. Escolha outro.");
+                return;
+            }
+
+            setError("Erro ao criar post. Tente novamente.");
         } finally {
             setSaving(false);
         }

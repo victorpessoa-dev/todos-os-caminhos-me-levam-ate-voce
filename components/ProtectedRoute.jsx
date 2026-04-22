@@ -19,7 +19,7 @@ function SessionLoading() {
 
 export default function ProtectedRoute({ children }) {
     const router = useRouter();
-    const { user, isAdmin, loading } = useAuth();
+    const { user, loading } = useAuth();
 
     useEffect(() => {
         if (loading) return;
@@ -27,16 +27,13 @@ export default function ProtectedRoute({ children }) {
             router.replace("/admin/login");
             return;
         }
-        if (!isAdmin) {
-            router.replace("/");
-        }
-    }, [isAdmin, loading, user, router]);
+    }, [loading, user, router]);
 
     if (loading) {
         return <SessionLoading />;
     }
 
-    if (!user || !isAdmin) {
+    if (!user) {
         return <SessionLoading />;
     }
 

@@ -2,10 +2,6 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import {
-    clearAdminStatusCache,
-    getIsCurrentUserAdmin,
-} from "@/services/admin";
 
 const AuthContext = createContext(undefined);
 
@@ -25,18 +21,7 @@ export function AuthProvider({ children }) {
 
             setSession(nextSession);
             setUser(nextUser);
-
-            if (!nextUser) {
-                clearAdminStatusCache();
-                setIsAdmin(false);
-                setLoading(false);
-                return;
-            }
-
-            const admin = await getIsCurrentUserAdmin(nextUser.id);
-            if (!isMounted) return;
-
-            setIsAdmin(admin);
+            setIsAdmin(Boolean(nextUser));
             setLoading(false);
         };
 
@@ -60,7 +45,6 @@ export function AuthProvider({ children }) {
     }, []);
 
     const signOut = async () => {
-        clearAdminStatusCache();
         setIsAdmin(false);
         setUser(null);
         setSession(null);

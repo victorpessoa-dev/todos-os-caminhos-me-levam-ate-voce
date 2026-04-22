@@ -15,13 +15,13 @@ export default function Login() {
     const [loginAttempted, setLoginAttempted] = useState(false);
 
     const router = useRouter();
-    const { user, isAdmin, loading, signOut } = useAuth();
+    const { user, loading, signOut } = useAuth();
 
     useEffect(() => {
-        if (!loading && user && isAdmin) {
+        if (!loading && user) {
             router.replace("/admin/dashboard");
         }
-    }, [isAdmin, loading, user, router]);
+    }, [loading, user, router]);
 
     const handleLogin = useCallback(async () => {
         if (loggingIn) return;
@@ -64,7 +64,7 @@ export default function Login() {
         );
     }
 
-    if (user && isAdmin) {
+    if (user) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
                 <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 shadow-sm text-center">
@@ -75,7 +75,7 @@ export default function Login() {
                         Acesso liberado
                     </h2>
                     <p className="mt-3 text-sm text-gray-600">
-                        Você já está autenticado como administrador. Redirecionando para o painel.
+                        Você já está autenticado. Redirecionando para o painel.
                     </p>
                 </div>
             </div>
@@ -87,22 +87,22 @@ export default function Login() {
             <div className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm w-full max-w-md">
                 <div className="mb-6">
                     <h2 className="text-xs text-center uppercase tracking-[0.24em] text-gray-500 mb-2">
-                        Acesso administrativo
+                        Acesso ao painel
                     </h2>
                 </div>
 
                 <div className="space-y-4">
-                    {loginAttempted && user && !isAdmin && (
+                    {loginAttempted && user && (
                         <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-3 text-sm text-amber-800 space-y-3">
                             <p>
-                                Sua conta está autenticada, mas não tem permissão para acessar o painel.
+                                Você já está autenticado. Se quiser entrar com outra conta, saia primeiro.
                             </p>
                             <button
                                 type="button"
                                 onClick={signOut}
                                 className="text-sm font-medium text-amber-900 underline underline-offset-4"
                             >
-                                Sair e usar outra conta
+                                Sair da sessão
                             </button>
                         </div>
                     )}
@@ -114,12 +114,12 @@ export default function Login() {
                     )}
 
                     <div>
-                        <label className="label-field">E-mail do admin</label>
+                        <label className="label-field">E-mail</label>
                         <input
                             className="input-field"
                             type="email"
                             autoComplete="email"
-                            placeholder="admin@exemplo.com"
+                            placeholder="seu@email.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
@@ -157,7 +157,7 @@ export default function Login() {
                         disabled={loggingIn}
                         className="btn btn-primary w-full mt-2 disabled:opacity-50"
                     >
-                        {loggingIn ? "Entrando..." : "Entrar"}
+                        {loggingIn ? "Entrando..." : "Acessar painel"}
                     </button>
                 </div>
             </div>

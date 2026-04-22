@@ -24,7 +24,7 @@ export default function Home() {
           </h1>
 
           <p className="hero-lead italic text-gray-600 mb-12">
-            Painel do site — gerencie posts, galeria e página sobre.
+            Painel do site — gerencie conteúdos, galeria e página sobre.
           </p>
 
           <div className="flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row sm:flex-wrap">

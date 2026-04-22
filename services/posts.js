@@ -165,6 +165,11 @@ export async function createPost(payload) {
 
     if (error) {
         console.error("Erro ao criar post:", error);
+
+        if (error.code === "23505") {
+            throw new Error("SLUG_DUPLICADO");
+        }
+
         throw error;
     }
 

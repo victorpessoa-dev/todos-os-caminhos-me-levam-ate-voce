@@ -1,5 +1,8 @@
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
+DROP TABLE IF EXISTS public.admin_users CASCADE;
+DROP FUNCTION IF EXISTS public.is_admin();
+
 CREATE OR REPLACE FUNCTION public.update_updated_at_column()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -24,27 +27,6 @@ BEGIN
     RETURN NEW;
 END;
 $$;
-
-CREATE TABLE IF NOT EXISTS public.admin_users (
-    user_id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-    created_at timestamptz NOT NULL DEFAULT now()
-);
-
-CREATE OR REPLACE FUNCTION public.is_admin()
-RETURNS boolean
-LANGUAGE sql
-STABLE
-SECURITY DEFINER
-SET search_path = public, pg_temp
-AS $$
-    SELECT EXISTS (
-        SELECT 1
-        FROM public.admin_users
-        WHERE user_id = auth.uid()
-    );
-$$;
-
-GRANT EXECUTE ON FUNCTION public.is_admin() TO anon, authenticated;
 
 CREATE TABLE IF NOT EXISTS public.posts (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -79,7 +61,9 @@ CREATE TABLE IF NOT EXISTS public.about (
     description text,
     image_url text,
     created_at timestamptz NOT NULL DEFAULT now(),
-    updated_at timestamptz NOT NULL DEFAULT now()
+    updated_at timestamptz NOT NULL DEFAULT now(),
+    user_id uuid NOT NULL DEFAULT auth.uid()
+        REFERENCES auth.users(id) ON DELETE CASCADE
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_about_singleton
@@ -104,8 +88,9 @@ ON public.gallery(user_id);
 CREATE INDEX IF NOT EXISTS idx_gallery_created_at
 ON public.gallery(created_at DESC);
 
-ALTER TABLE public.admin_users ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.admin_users FORCE ROW LEVEL SECURITY;
+CREATE INDEX IF NOT EXISTS idx_about_user_id
+ON public.about(user_id);
+
 ALTER TABLE public.posts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.posts FORCE ROW LEVEL SECURITY;
 ALTER TABLE public.gallery ENABLE ROW LEVEL SECURITY;
@@ -133,39 +118,30 @@ BEFORE INSERT OR UPDATE ON public.posts
 FOR EACH ROW
 EXECUTE FUNCTION public.sync_post_publication_state();
 
-CREATE POLICY "Admins can read own admin record"
-ON public.admin_users
-FOR SELECT
-TO authenticated
-USING (user_id = auth.uid());
-
 CREATE POLICY "Public can read published posts"
 ON public.posts
 FOR SELECT
 TO anon
-USING (
-    status = 'published'
-    OR public.is_admin()
-);
+USING (status = 'published');
 
-CREATE POLICY "Admins can insert posts"
+CREATE POLICY "Authenticated can insert posts"
 ON public.posts
 FOR INSERT
 TO authenticated
-WITH CHECK (public.is_admin());
+WITH CHECK (true);
 
-CREATE POLICY "Admins can update posts"
+CREATE POLICY "Authenticated can update posts"
 ON public.posts
 FOR UPDATE
 TO authenticated
-USING (public.is_admin())
-WITH CHECK (public.is_admin());
+USING (true)
+WITH CHECK (true);
 
-CREATE POLICY "Admins can delete posts"
+CREATE POLICY "Authenticated can delete posts"
 ON public.posts
 FOR DELETE
 TO authenticated
-USING (public.is_admin());
+USING (true);
 
 CREATE POLICY "Public can read gallery"
 ON public.gallery
@@ -173,24 +149,24 @@ FOR SELECT
 TO anon
 USING (true);
 
-CREATE POLICY "Admins can insert gallery"
+CREATE POLICY "Authenticated can insert gallery"
 ON public.gallery
 FOR INSERT
 TO authenticated
-WITH CHECK (public.is_admin());
+WITH CHECK (true);
 
-CREATE POLICY "Admins can update gallery"
+CREATE POLICY "Authenticated can update gallery"
 ON public.gallery
 FOR UPDATE
 TO authenticated
-USING (public.is_admin())
-WITH CHECK (public.is_admin());
+USING (true)
+WITH CHECK (true);
 
-CREATE POLICY "Admins can delete gallery"
+CREATE POLICY "Authenticated can delete gallery"
 ON public.gallery
 FOR DELETE
 TO authenticated
-USING (public.is_admin());
+USING (true);
 
 CREATE POLICY "Public can read about"
 ON public.about
@@ -198,24 +174,24 @@ FOR SELECT
 TO anon
 USING (true);
 
-CREATE POLICY "Admins can insert about"
+CREATE POLICY "Authenticated can insert about"
 ON public.about
 FOR INSERT
 TO authenticated
-WITH CHECK (public.is_admin());
+WITH CHECK (true);
 
-CREATE POLICY "Admins can update about"
+CREATE POLICY "Authenticated can update about"
 ON public.about
 FOR UPDATE
 TO authenticated
-USING (public.is_admin())
-WITH CHECK (public.is_admin());
+USING (true)
+WITH CHECK (true);
 
-CREATE POLICY "Admins can delete about"
+CREATE POLICY "Authenticated can delete about"
 ON public.about
 FOR DELETE
 TO authenticated
-USING (public.is_admin());
+USING (true);
 
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('post-images', 'post-images', true)
@@ -227,33 +203,21 @@ FOR SELECT
 TO public
 USING (bucket_id = 'post-images');
 
-CREATE POLICY "Admins can upload post images"
+CREATE POLICY "Authenticated can upload post images"
 ON storage.objects
 FOR INSERT
 TO authenticated
-WITH CHECK (
-    bucket_id = 'post-images'
-    AND public.is_admin()
-);
+WITH CHECK (bucket_id = 'post-images');
 
-CREATE POLICY "Admins can update post images"
+CREATE POLICY "Authenticated can update post images"
 ON storage.objects
 FOR UPDATE
 TO authenticated
-USING (
-    bucket_id = 'post-images'
-    AND public.is_admin()
-)
-WITH CHECK (
-    bucket_id = 'post-images'
-    AND public.is_admin()
-);
+USING (bucket_id = 'post-images')
+WITH CHECK (bucket_id = 'post-images');
 
-CREATE POLICY "Admins can delete post images"
+CREATE POLICY "Authenticated can delete post images"
 ON storage.objects
 FOR DELETE
 TO authenticated
-USING (
-    bucket_id = 'post-images'
-    AND public.is_admin()
-);
+USING (bucket_id = 'post-images');
