@@ -4,16 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createPost } from "../../../../../services/posts";
 import ImageUrlField from "@/components/ImageUrlField";
-
-function slugify(value) {
-    return value
-        .normalize("NFD")
-        .replace(/\p{M}/gu, "")
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
-}
+import { normalizeSlugInput } from "@/lib/content";
 
 function normalizeContent(text) {
     if (!text) return "";
@@ -40,13 +31,13 @@ export default function AdminNewPost() {
 
     function onTitleChange(v) {
         setTitle(v);
-        if (!slugTouched) setSlug(slugify(v));
+        if (!slugTouched) setSlug(normalizeSlugInput(v));
     }
 
     async function handleSubmit(e) {
         e.preventDefault();
         setError("");
-        const finalSlug = (slug || slugify(title)).trim();
+        const finalSlug = normalizeSlugInput(slug || title);
         if (!title.trim() || !finalSlug) {
             setError("Titulo e slug sao obrigatorios.");
             return;
@@ -93,7 +84,7 @@ export default function AdminNewPost() {
                             value={slug}
                             onChange={(e) => {
                                 setSlugTouched(true);
-                                setSlug(e.target.value);
+                                setSlug(normalizeSlugInput(e.target.value));
                             }}
                             placeholder="url-amigavel"
                         />

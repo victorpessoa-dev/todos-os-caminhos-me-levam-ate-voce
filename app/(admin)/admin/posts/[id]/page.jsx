@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { getPostById, updatePost } from "../../../../../services/posts";
 import ImageUrlField from "@/components/ImageUrlField";
+import { normalizeSlugInput } from "@/lib/content";
 
 export default function AdminEditPost() {
     const { id } = useParams();
@@ -65,7 +66,9 @@ export default function AdminEditPost() {
     async function handleSubmit(e) {
         e.preventDefault();
         setError("");
-        if (!title.trim() || !slug.trim()) {
+        const normalizedSlug = normalizeSlugInput(slug);
+
+        if (!title.trim() || !normalizedSlug) {
             setError("Titulo e slug sao obrigatorios.");
             return;
         }
@@ -82,7 +85,7 @@ export default function AdminEditPost() {
         try {
             await updatePost(id, {
                 title: title.trim(),
-                slug: slug.trim(),
+                slug: normalizedSlug,
                 description: description.trim() || "",
                 content: content.trim() || "",
                 cover_image: coverImage.trim() || null,
@@ -143,7 +146,7 @@ export default function AdminEditPost() {
                     </div>
                     <div>
                         <label className="label-field">Slug</label>
-                        <input className="input-field font-mono text-xs sm:text-sm" value={slug} onChange={(e) => setSlug(e.target.value)} required />
+                        <input className="input-field font-mono text-xs sm:text-sm" value={slug} onChange={(e) => setSlug(normalizeSlugInput(e.target.value))} required />
                     </div>
                     <div>
                         <label className="label-field">Resumo</label>

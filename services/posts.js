@@ -1,5 +1,5 @@
 import { supabase } from "../lib/supabaseClient";
-import { normalizeImageUrlInput, sanitizeHtml } from "../lib/content";
+import { normalizeImageUrlInput, normalizeSlugInput, sanitizeHtml } from "../lib/content";
 import { deletePostImageByUrl } from "./storage";
 
 const DEFAULT_PUBLIC_POSTS_LIMIT = 10;
@@ -27,18 +27,20 @@ function applyRange(query, page = 1, limit = DEFAULT_PUBLIC_POSTS_LIMIT) {
     return query.range(from, to);
 }
 
-
 export async function getPublishedPosts({
     page = 1,
     limit = DEFAULT_PUBLIC_POSTS_LIMIT,
 } = {}) {
+    const safePage = Math.max(1, Number(page) || 1);
+    const safeLimit = Math.max(1, Number(limit) || DEFAULT_PUBLIC_POSTS_LIMIT);
+
     const query = supabase
         .from("posts")
-        .select(PUBLIC_POST_CARD_FIELDS)
+        .select(PUBLIC_POST_CARD_FIELDS, { count: "exact" })
         .eq("status", "published")
         .order("published_at", { ascending: false });
 
-    const { data, error } = await applyRange(query, page, limit);
+    const { data, error, count } = await applyRange(query, safePage, safeLimit);
 
     if (error) {
         console.error("Erro ao buscar posts:", error);
@@ -47,15 +49,19 @@ export async function getPublishedPosts({
 
     return {
         posts: data || [],
-        hasMore: (data || []).length === limit,
+        total: count || 0,
+        hasMore: safePage * safeLimit < (count || 0),
     };
 }
 
 export async function getPublishedPostBySlug(slug) {
+    const normalizedSlug = normalizeSlugInput(slug);
+    if (!normalizedSlug) return null;
+
     const { data, error } = await supabase
         .from("posts")
         .select(PUBLIC_POST_DETAIL_FIELDS)
-        .eq("slug", slug)
+        .eq("slug", normalizedSlug)
         .eq("status", "published")
         .limit(1)
         .maybeSingle();
@@ -84,24 +90,30 @@ export async function getPublishedPostSlugs({ limit = 200 } = {}) {
     return data || [];
 }
 
-
 export async function getPosts({
     page = 1,
     limit = DEFAULT_ADMIN_POSTS_LIMIT,
 } = {}) {
+    const safePage = Math.max(1, Number(page) || 1);
+    const safeLimit = Math.max(1, Number(limit) || DEFAULT_ADMIN_POSTS_LIMIT);
+
     const query = supabase
         .from("posts")
-        .select(ADMIN_LIST_FIELDS)
+        .select(ADMIN_LIST_FIELDS, { count: "exact" })
         .order("created_at", { ascending: false });
 
-    const { data, error } = await applyRange(query, page, limit);
+    const { data, error, count } = await applyRange(query, safePage, safeLimit);
 
     if (error) {
         console.error("Erro ao buscar posts admin:", error);
         throw error;
     }
 
-    return data || [];
+    return {
+        posts: data || [],
+        total: count || 0,
+        hasMore: safePage * safeLimit < (count || 0),
+    };
 }
 
 export async function getPostById(id) {
@@ -122,24 +134,28 @@ export async function getPostById(id) {
     return data;
 }
 
-
 export async function createPost(payload) {
     const {
         data: { session },
     } = await supabase.auth.getSession();
 
     if (!session?.user?.id) {
-        throw new Error("Usuário não autenticado");
+        throw new Error("Usuario nao autenticado");
     }
 
     const sanitizedPayload = {
         ...payload,
         user_id: session.user.id,
+        slug: normalizeSlugInput(payload.slug),
         description: payload.description?.trim() || "",
         content: sanitizeHtml(payload.content),
         cover_image: normalizeImageUrlInput(payload.cover_image),
         cover_image_alt: payload.cover_image_alt?.trim() || null,
     };
+
+    if (!sanitizedPayload.slug) {
+        throw new Error("Slug invalido");
+    }
 
     const { data, error } = await supabase
         .from("posts")
@@ -155,9 +171,8 @@ export async function createPost(payload) {
     return data;
 }
 
-
 export async function updatePost(id, payload) {
-    if (!id) throw new Error("ID inválido");
+    if (!id) throw new Error("ID invalido");
 
     const { data: previous, error: prevError } = await supabase
         .from("posts")
@@ -172,11 +187,16 @@ export async function updatePost(id, payload) {
 
     const sanitizedPayload = {
         ...payload,
+        slug: normalizeSlugInput(payload.slug),
         description: payload.description?.trim() || "",
         content: sanitizeHtml(payload.content),
         cover_image: normalizeImageUrlInput(payload.cover_image),
         cover_image_alt: payload.cover_image_alt?.trim() || null,
     };
+
+    if (!sanitizedPayload.slug) {
+        throw new Error("Slug invalido");
+    }
 
     const { data, error } = await supabase
         .from("posts")
@@ -201,23 +221,13 @@ export async function updatePost(id, payload) {
     return data;
 }
 
-
 export async function deletePost(id) {
-    if (!id) throw new Error("ID inválido");
-
-    const {
-        data: { session },
-    } = await supabase.auth.getSession();
-
-    if (!session?.user?.id) {
-        throw new Error("Usuário não autenticado");
-    }
+    if (!id) throw new Error("ID invalido");
 
     const { data: post, error: fetchError } = await supabase
         .from("posts")
-        .select("id, cover_image, user_id")
+        .select("id, cover_image")
         .eq("id", id)
-        .eq("user_id", session.user.id)
         .maybeSingle();
 
     if (fetchError) {
@@ -226,26 +236,25 @@ export async function deletePost(id) {
     }
 
     if (!post) {
-        throw new Error("Post não encontrado ou sem permissão");
+        throw new Error("Post nao encontrado ou sem permissao");
+    }
+
+    const { error } = await supabase
+        .from("posts")
+        .delete()
+        .eq("id", id);
+
+    if (error) {
+        console.error("Erro ao deletar post:", error);
+        throw error;
     }
 
     if (post.cover_image) {
         try {
             await deletePostImageByUrl(post.cover_image);
         } catch (err) {
-            console.warn("Erro ao deletar imagem:", err);
+            console.warn("Erro ao deletar imagem do post:", err);
         }
-    }
-
-    const { error } = await supabase
-        .from("posts")
-        .delete()
-        .eq("id", id)
-        .eq("user_id", session.user.id);
-
-    if (error) {
-        console.error("Erro ao deletar post:", error);
-        throw error;
     }
 
     return true;

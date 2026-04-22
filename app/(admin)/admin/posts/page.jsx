@@ -15,7 +15,7 @@ export default function AdminPosts() {
 
     async function loadPosts() {
         try {
-            const data = await getPosts();
+            const { posts: data } = await getPosts();
             setPosts(data);
         } finally {
             setLoading(false);

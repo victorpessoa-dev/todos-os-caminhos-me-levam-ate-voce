@@ -4,7 +4,8 @@ import { buildMetadata } from "../../../lib/site";
 
 export const metadata = buildMetadata({
     title: "Diário",
-    description: "Leia os posts publicados do diário e acompanhe reflexões sobre a caminhada com Cristo.",
+    description:
+        "Leia os posts publicados do diário e acompanhe reflexões sobre a caminhada com Cristo.",
     path: "/diary",
 });
 
@@ -12,7 +13,11 @@ export const revalidate = 300;
 export const POSTS_PER_PAGE = 10;
 
 export default async function Diary({ searchParams }) {
-    const currentPage = Number(searchParams?.page || 1);
+    const requestedPage = Number(searchParams?.page || 1);
+    const currentPage =
+        Number.isFinite(requestedPage) && requestedPage > 0
+            ? requestedPage
+            : 1;
 
     let posts = [];
     let totalPages = 0;
@@ -24,7 +29,7 @@ export default async function Diary({ searchParams }) {
         });
 
         posts = data;
-        totalPages = Math.ceil(total / POSTS_PER_PAGE);
+        totalPages = Math.max(1, Math.ceil((total || 0) / POSTS_PER_PAGE));
     } catch (error) {
         console.error("Erro ao carregar posts:", error);
     }
@@ -49,27 +54,40 @@ export default async function Diary({ searchParams }) {
                             ))}
                         </div>
 
-                        <div className="flex justify-center items-center gap-4 mt-12">
-                            {currentPage > 1 && (
+                        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-12">
+                            {currentPage > 1 ? (
                                 <a
                                     href={`?page=${currentPage - 1}`}
-                                    className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
+                                    className="px-5 py-2.5 bg-gray-200 rounded-lg hover:bg-gray-300 transition text-center w-full sm:w-auto"
                                 >
                                     ← Anterior
                                 </a>
+                            ) : (
+                                <span className="px-5 py-2.5 bg-gray-100 text-gray-400 rounded-lg text-center w-full sm:w-auto">
+                                    ← Anterior
+                                </span>
                             )}
 
-                            <span className="text-gray-600 text-sm">
-                                Página {currentPage} de {totalPages}
-                            </span>
+                            <div className="px-4 py-2 rounded-lg border border-gray-200 bg-white/70 text-center">
+                                <span className="text-xs uppercase tracking-[0.2em] text-gray-500 block">
+                                    Navegação
+                                </span>
+                                <span className="text-gray-700 text-sm sm:text-base font-medium">
+                                    Página {currentPage} de {totalPages}
+                                </span>
+                            </div>
 
-                            {currentPage < totalPages && (
+                            {currentPage < totalPages ? (
                                 <a
                                     href={`?page=${currentPage + 1}`}
-                                    className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
+                                    className="px-5 py-2.5 bg-gray-200 rounded-lg hover:bg-gray-300 transition text-center w-full sm:w-auto"
                                 >
                                     Próxima →
                                 </a>
+                            ) : (
+                                <span className="px-5 py-2.5 bg-gray-100 text-gray-400 rounded-lg text-center w-full sm:w-auto">
+                                    Próxima →
+                                </span>
                             )}
                         </div>
                     </>

@@ -21,18 +21,22 @@ export async function getGallery({
     page = 1,
     limit = DEFAULT_GALLERY_LIMIT,
 } = {}) {
+    const safePage = Math.max(1, Number(page) || 1);
+    const safeLimit = Math.max(1, Number(limit) || DEFAULT_GALLERY_LIMIT);
+
     const query = supabase
         .from("gallery")
-        .select(GALLERY_FIELDS)
+        .select(GALLERY_FIELDS, { count: "exact" })
         .order("created_at", { ascending: false });
 
-    const { data, error } = await applyRange(query, page, limit);
+    const { data, error, count } = await applyRange(query, safePage, safeLimit);
 
     if (error) throw error;
 
     return {
         items: data || [],
-        hasMore: (data || []).length === limit,
+        total: count || 0,
+        hasMore: safePage * safeLimit < (count || 0),
     };
 }
 
@@ -42,7 +46,7 @@ export async function addGalleryItem(payload) {
     } = await supabase.auth.getSession();
 
     if (!session?.user?.id) {
-        throw new Error("Usuário não autenticado");
+        throw new Error("Usuario nao autenticado");
     }
 
     const sanitizedPayload = {
@@ -73,15 +77,13 @@ export async function addGalleryItem(payload) {
 }
 
 export async function deleteGalleryItem(id) {
-    const { data: item } = await supabase
+    const { data: item, error: fetchError } = await supabase
         .from("gallery")
         .select("image_url")
         .eq("id", id)
         .maybeSingle();
 
-    if (item?.image_url) {
-        await deletePostImageByUrl(item.image_url);
-    }
+    if (fetchError) throw fetchError;
 
     const { error } = await supabase
         .from("gallery")
@@ -89,4 +91,12 @@ export async function deleteGalleryItem(id) {
         .eq("id", id);
 
     if (error) throw error;
+
+    if (item?.image_url) {
+        try {
+            await deletePostImageByUrl(item.image_url);
+        } catch (storageError) {
+            console.warn("Erro ao remover imagem da galeria:", storageError);
+        }
+    }
 }

@@ -2,7 +2,10 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { getIsCurrentUserAdmin } from "@/services/admin";
+import {
+    clearAdminStatusCache,
+    getIsCurrentUserAdmin,
+} from "@/services/admin";
 
 const AuthContext = createContext(undefined);
 
@@ -13,17 +16,26 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const syncAuthState = async (nextSession) => {
-            setSession(nextSession);
-            setUser(nextSession?.user ?? null);
+        let isMounted = true;
 
-            if (!nextSession?.user) {
+        const syncAuthState = async (nextSession) => {
+            if (!isMounted) return;
+
+            const nextUser = nextSession?.user ?? null;
+
+            setSession(nextSession);
+            setUser(nextUser);
+
+            if (!nextUser) {
+                clearAdminStatusCache();
                 setIsAdmin(false);
                 setLoading(false);
                 return;
             }
 
-            const admin = await getIsCurrentUserAdmin();
+            const admin = await getIsCurrentUserAdmin(nextUser.id);
+            if (!isMounted) return;
+
             setIsAdmin(admin);
             setLoading(false);
         };
@@ -42,6 +54,7 @@ export function AuthProvider({ children }) {
         );
 
         return () => {
+            isMounted = false;
             listener?.subscription?.unsubscribe();
         };
     }, []);
