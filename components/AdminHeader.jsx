@@ -33,7 +33,7 @@ export default function AdminHeader() {
 
     try {
       await signOut();
-      router.replace("/");
+      router.replace("/login");
     } catch (error) {
       console.error("Erro ao sair:", error);
     } finally {
