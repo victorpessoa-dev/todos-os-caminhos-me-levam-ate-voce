@@ -86,15 +86,9 @@ export default function Login() {
         <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
             <div className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm w-full max-w-md">
                 <div className="mb-6">
-                    <p className="text-xs uppercase tracking-[0.24em] text-gray-500 mb-2">
+                    <h2 className="text-xs text-center uppercase tracking-[0.24em] text-gray-500 mb-2">
                         Acesso administrativo
-                    </p>
-                    <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">
-                        Login do Admin
                     </h2>
-                    <p className="mt-2 text-sm text-gray-600">
-                        Esta área é exclusiva para administradores autorizados.
-                    </p>
                 </div>
 
                 <div className="space-y-4">
