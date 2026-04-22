@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { supabase } from "../lib/supabaseClient";
+import { useAuth } from "@/contexts/auth-context";
 import { Menu, X, LogOut } from "lucide-react";
 
 export default function AdminHeader() {
@@ -12,6 +12,7 @@ export default function AdminHeader() {
 
   const pathname = usePathname();
   const router = useRouter();
+  const { signOut } = useAuth();
 
   const navLinks = [
     { path: "/admin/dashboard", label: "Dashboard" },
@@ -31,14 +32,14 @@ export default function AdminHeader() {
     setLoggingOut(true);
 
     try {
-      await supabase.auth.signOut();
+      await signOut();
       router.replace("/admin/login");
     } catch (error) {
       console.error("Erro ao sair:", error);
     } finally {
       setLoggingOut(false);
     }
-  }, [router, loggingOut]);
+  }, [router, loggingOut, signOut]);
 
   const handleNavigate = useCallback(() => {
     setIsMenuOpen(false);

@@ -60,7 +60,11 @@ export function AuthProvider({ children }) {
     }, []);
 
     const signOut = async () => {
-        await supabase.auth.signOut();
+        clearAdminStatusCache();
+        setIsAdmin(false);
+        setUser(null);
+        setSession(null);
+        await supabase.auth.signOut({ scope: "global" });
     };
 
     return (

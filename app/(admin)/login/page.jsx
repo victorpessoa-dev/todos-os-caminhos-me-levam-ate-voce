@@ -159,10 +159,6 @@ export default function Login() {
                     >
                         {loggingIn ? "Entrando..." : "Entrar"}
                     </button>
-
-                    <p className="text-xs text-gray-500 text-center">
-                        Apenas contas cadastradas em `admin_users` conseguem entrar.
-                    </p>
                 </div>
             </div>
         </div>
