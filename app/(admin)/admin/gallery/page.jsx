@@ -61,7 +61,7 @@ export default function AdminGallery() {
             setMessage("Imagem adicionada!");
         } catch (error) {
             console.error(error);
-            setMessage("Erro ao adicionar imagem.");
+            setMessage(error?.message || "Erro ao adicionar imagem.");
         } finally {
             setSaving(false);
         }

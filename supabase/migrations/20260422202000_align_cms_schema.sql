@@ -124,6 +124,12 @@ FOR SELECT
 TO anon
 USING (status = 'published');
 
+CREATE POLICY "Authenticated can read posts"
+ON public.posts
+FOR SELECT
+TO authenticated
+USING (true);
+
 CREATE POLICY "Authenticated can insert posts"
 ON public.posts
 FOR INSERT
@@ -149,6 +155,12 @@ FOR SELECT
 TO anon
 USING (true);
 
+CREATE POLICY "Authenticated can read gallery"
+ON public.gallery
+FOR SELECT
+TO authenticated
+USING (true);
+
 CREATE POLICY "Authenticated can insert gallery"
 ON public.gallery
 FOR INSERT
@@ -172,6 +184,12 @@ CREATE POLICY "Public can read about"
 ON public.about
 FOR SELECT
 TO anon
+USING (true);
+
+CREATE POLICY "Authenticated can read about"
+ON public.about
+FOR SELECT
+TO authenticated
 USING (true);
 
 CREATE POLICY "Authenticated can insert about"

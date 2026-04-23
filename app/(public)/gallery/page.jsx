@@ -27,6 +27,10 @@ export default async function Gallery() {
         console.error("Erro ao carregar galeria:", error);
     }
 
+    if (images.length === 0) {
+        console.warn("Galeria pública sem imagens carregadas.");
+    }
+
     return (
         <GalleryScroll
             initialImages={images}

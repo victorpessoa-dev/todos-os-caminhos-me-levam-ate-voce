@@ -6,6 +6,8 @@ export async function getAboutInfo() {
     const { data, error } = await supabase
         .from("about")
         .select("*")
+        .order("updated_at", { ascending: false })
+        .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle();
 
@@ -18,8 +20,17 @@ export async function getAboutInfo() {
 }
 
 export async function upsertAbout(id, payload) {
+    const {
+        data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session?.user?.id) {
+        throw new Error("Usuario nao autenticado");
+    }
+
     const sanitizedPayload = {
         ...payload,
+        user_id: session.user.id,
         description: sanitizeHtml(payload.description),
         image_url: normalizeImageUrlInput(payload.image_url),
     };

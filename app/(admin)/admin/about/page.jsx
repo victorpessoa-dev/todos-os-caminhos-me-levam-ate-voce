@@ -36,8 +36,9 @@ export default function AdminAbout() {
         try {
             await upsertAbout(id, { description, image_url: imageUrl || null });
             setMessage("Salvo com sucesso.");
-        } catch {
-            setMessage("Erro ao salvar.");
+        } catch (error) {
+            console.error(error);
+            setMessage(error?.message || "Erro ao salvar.");
         } finally {
             setSaving(false);
         }

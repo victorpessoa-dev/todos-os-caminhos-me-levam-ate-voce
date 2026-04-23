@@ -42,6 +42,7 @@ export default function AdminNewPost() {
             setError("Titulo e slug sao obrigatorios.");
             return;
         }
+
         setSaving(true);
         try {
             await createPost({
@@ -57,11 +58,11 @@ export default function AdminNewPost() {
             router.push("/admin/posts");
         } catch (err) {
             if (err?.message === "SLUG_DUPLICADO") {
-                setError("Já existe um post com esse slug. Escolha outro.");
+                setError("Ja existe um post com esse slug. Escolha outro.");
                 return;
             }
 
-            setError("Erro ao criar post. Tente novamente.");
+            setError(err?.message || "Erro ao criar post. Tente novamente.");
         } finally {
             setSaving(false);
         }

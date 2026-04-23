@@ -179,6 +179,14 @@ export async function createPost(payload) {
 export async function updatePost(id, payload) {
     if (!id) throw new Error("ID invalido");
 
+    const {
+        data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session?.user?.id) {
+        throw new Error("Usuario nao autenticado");
+    }
+
     const { data: previous, error: prevError } = await supabase
         .from("posts")
         .select("cover_image")
@@ -192,6 +200,7 @@ export async function updatePost(id, payload) {
 
     const sanitizedPayload = {
         ...payload,
+        user_id: session.user.id,
         slug: normalizeSlugInput(payload.slug),
         description: payload.description?.trim() || "",
         content: sanitizeHtml(payload.content),
